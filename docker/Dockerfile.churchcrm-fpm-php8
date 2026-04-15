@@ -60,28 +60,6 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
 # Production stage - minimal runtime
 FROM base AS prod
 
-RUN apt-get update && \
-    apt-get install -y \
-        git \
-        make \
-        python3 \
-        unzip \
-        curl \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Xdebug for step-debugging
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-
-# Install Composer
-RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
-    rm composer-setup.php
-
-# Install NVM + Node.js (needed to run npm run deploy inside the container)
-RUN curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh -o /opt/node-install.sh && \
-    chmod a+x /opt/node-install.sh && \
-    /opt/node-install.sh && \
-    rm /opt/node-install.sh
 
 
 # Dev stage - includes build tools for local development inside the container
