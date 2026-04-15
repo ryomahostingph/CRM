@@ -60,6 +60,14 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
 # Production stage - minimal runtime
 FROM base AS prod
 
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY . /var/www/html
+
+RUN composer install --no-dev --optimize-autoloader
+
 
 # Dev stage - includes build tools for local development inside the container
 FROM base AS dev
